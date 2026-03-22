@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.fenron.lifesync_journal"
-        minSdk = flutter.minSdkVersion
+        minSdk = 26 // health-Paket erfordert mindestens API 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
