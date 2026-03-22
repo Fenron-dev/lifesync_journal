@@ -7,6 +7,10 @@ on:
       - 'v*'
   workflow_dispatch:
 
+# Flutter-Version die Dart >=3.5.0 enthält (record ^6.2.0 Voraussetzung)
+env:
+  FLUTTER_VERSION: '3.24.5'
+
 jobs:
   build-android:
     name: Build Android APK
@@ -25,9 +29,12 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
           cache: true
+
+      - name: Disable Flutter analytics
+        run: flutter config --no-analytics
 
       - name: Install dependencies
         run: flutter pub get
@@ -81,12 +88,12 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
           cache: true
 
-      - name: Enable Linux desktop
-        run: flutter config --enable-linux-desktop
+      - name: Disable Flutter analytics
+        run: flutter config --no-analytics --enable-linux-desktop
 
       - name: Install dependencies
         run: flutter pub get
