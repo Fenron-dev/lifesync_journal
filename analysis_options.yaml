@@ -1,0 +1,7 @@
+# analysis_options.yaml
+# Isar build configuration
+# Run: flutter pub run build_runner build
+
+analyzer:
+  plugins:
+    - isar_analyzer

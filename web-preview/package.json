@@ -1,0 +1,14 @@
+{
+  "name": "lifesync-web-preview",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

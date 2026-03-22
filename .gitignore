@@ -1,0 +1,147 @@
+# ============================================================
+# Flutter / Dart
+# ============================================================
+
+# Build artifacts
+build/
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+
+# Generated files (committed intentionally — see CLAUDE.md)
+# *.g.dart
+# *.freezed.dart
+
+# Flutter-specific
+*.flutter-plugins
+.flutter-plugins
+.flutter-plugins-dependencies
+*.flutter-plugins-dependencies
+
+# Dart coverage
+coverage/
+
+# ============================================================
+# Android
+# ============================================================
+
+# Local Android SDK / Flutter SDK paths (machine-specific)
+android/local.properties
+
+# Gradle build outputs
+android/.gradle/
+android/app/build/
+android/build/
+android/captures/
+android/generatedDebug*/
+android/generatedRelease*/
+android/.externalNativeBuild/
+android/.cxx/
+
+# Signing keys — NEVER commit these
+android/app/*.jks
+android/app/*.keystore
+android/key.properties
+android/release.properties
+
+# Google Services (may contain Firebase credentials)
+android/app/google-services.json
+
+# ============================================================
+# iOS
+# ============================================================
+
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/ephemeral/
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Pods/
+ios/Podfile.lock
+
+# Google Services (may contain Firebase credentials)
+ios/Runner/GoogleService-Info.plist
+
+# ============================================================
+# macOS
+# ============================================================
+
+macos/Flutter/ephemeral/
+macos/Pods/
+macos/Podfile.lock
+
+# ============================================================
+# Linux
+# ============================================================
+
+linux/flutter/ephemeral/
+
+# ============================================================
+# Windows
+# ============================================================
+
+windows/flutter/ephemeral/
+
+# ============================================================
+# Web
+# ============================================================
+
+web/
+lib/generated_plugin_registrant.dart
+
+# ============================================================
+# Web Preview (Next.js)
+# ============================================================
+
+web-preview/.next/
+web-preview/node_modules/
+web-preview/.env
+web-preview/.env.local
+web-preview/.env.*.local
+
+# ============================================================
+# IDE / Editor
+# ============================================================
+
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.DS_Store
+Thumbs.db
+
+# Claude Code (internal AI assistant config)
+.claude/
+
+# ============================================================
+# Secrets & Credentials — NEVER commit these
+# ============================================================
+
+*.env
+.env
+.env.*
+secrets.dart
+secrets.json
+credentials.json
+*_credentials.json
+*.p8
+*.p12
+*.pem
+*.cer
+*.der
+*.pfx
+google-services.json
+GoogleService-Info.plist
