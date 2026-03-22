@@ -1,0 +1,9 @@
+// Placeholder test — app uses Isar + Riverpod which require platform init.
+// Real integration tests will be added in a later milestone.
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('placeholder', () {
+    expect(1 + 1, 2);
+  });
+}
