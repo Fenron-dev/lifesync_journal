@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -26,7 +26,6 @@ AttachmentService attachmentService(AttachmentServiceRef ref) {
 
 class AttachmentService {
   final Isar _db;
-  final _imagePicker = ImagePicker();
   final _recorder = AudioRecorder();
   final _uuid = const Uuid();
   final _encryptionService = EncryptionService();
@@ -96,6 +95,8 @@ class AttachmentService {
 
   // ============ IMAGE CAPTURE ============
 
+  /// Kamera-Aufnahme (nur Android/iOS); auf Linux wird stattdessen der
+  /// Datei-Picker geöffnet, da keine Kamera-API verfügbar ist.
   Future<JournalAttachment?> capturePhoto({
     required int journalEntryId,
     bool compress = true,
@@ -103,15 +104,14 @@ class AttachmentService {
     int maxHeight = 1920,
     int quality = 85,
   }) async {
-    final XFile? image = await _imagePicker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: quality,
-      maxWidth: maxWidth.toDouble(),
-      maxHeight: maxHeight.toDouble(),
+    // Auf Linux/Desktop gibt es keine Kamera-API → Galerie-Picker öffnen
+    return pickImage(
+      journalEntryId: journalEntryId,
+      compress: compress,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+      quality: quality,
     );
-    if (image == null) return null;
-    return _processImageFile(File(image.path), journalEntryId,
-        compress: compress, maxWidth: maxWidth, maxHeight: maxHeight, quality: quality);
   }
 
   Future<JournalAttachment?> pickImage({
@@ -121,14 +121,14 @@ class AttachmentService {
     int maxHeight = 1920,
     int quality = 85,
   }) async {
-    final XFile? image = await _imagePicker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: quality,
-      maxWidth: maxWidth.toDouble(),
-      maxHeight: maxHeight.toDouble(),
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
     );
-    if (image == null) return null;
-    return _processImageFile(File(image.path), journalEntryId,
+    if (result == null || result.files.isEmpty) return null;
+    final path = result.files.single.path;
+    if (path == null) return null;
+    return _processImageFile(File(path), journalEntryId,
         compress: compress, maxWidth: maxWidth, maxHeight: maxHeight, quality: quality);
   }
 
@@ -139,14 +139,15 @@ class AttachmentService {
     int maxHeight = 1920,
     int quality = 85,
   }) async {
-    final List<XFile> images = await _imagePicker.pickMultiImage(
-      imageQuality: quality,
-      maxWidth: maxWidth.toDouble(),
-      maxHeight: maxHeight.toDouble(),
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: true,
     );
+    if (result == null) return [];
     final attachments = <JournalAttachment>[];
-    for (final image in images) {
-      final a = await _processImageFile(File(image.path), journalEntryId,
+    for (final file in result.files) {
+      if (file.path == null) continue;
+      final a = await _processImageFile(File(file.path!), journalEntryId,
           compress: compress, maxWidth: maxWidth, maxHeight: maxHeight, quality: quality);
       if (a != null) attachments.add(a);
     }
@@ -221,8 +222,11 @@ class AttachmentService {
   bool get isRecording => _isRecording;
 
   Future<bool> startAudioRecording() async {
-    final status = await Permission.microphone.request();
-    if (!status.isGranted) return false;
+    // permission_handler unterstützt Linux nicht — Berechtigung überspringen
+    if (!Platform.isLinux) {
+      final status = await Permission.microphone.request();
+      if (!status.isGranted) return false;
+    }
 
     final appDir = await getApplicationDocumentsDirectory();
     final recordingDir = Directory('${appDir.path}/recordings');

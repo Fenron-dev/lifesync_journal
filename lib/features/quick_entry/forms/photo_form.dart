@@ -86,14 +86,17 @@ class _PhotoFormState extends ConsumerState<_PhotoForm> {
                   label: const Text('Galerie'),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.icon(
-                  onPressed: _takePhoto,
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text('Kamera'),
+              // Kamera-Button nur auf mobilen Plattformen
+              if (!Platform.isLinux && !Platform.isMacOS && !Platform.isWindows) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: _takePhoto,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Kamera'),
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
           
@@ -234,28 +237,23 @@ class _PhotoFormState extends ConsumerState<_PhotoForm> {
   }
 
   Future<void> _pickFromGallery() async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-      maxWidth: 1920,
-      maxHeight: 1920,
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
     );
-    if (image != null && mounted) {
-      setState(() => _selectedImage = File(image.path));
+    if (result != null && result.files.single.path != null && mounted) {
+      setState(() => _selectedImage = File(result.files.single.path!));
     }
   }
 
   Future<void> _takePhoto() async {
-    final picker = ImagePicker();
-    final image = await picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 85,
-      maxWidth: 1920,
-      maxHeight: 1920,
+    // Nur auf mobilen Plattformen aufgerufen (Button ist auf Desktop ausgeblendet)
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
     );
-    if (image != null && mounted) {
-      setState(() => _selectedImage = File(image.path));
+    if (result != null && result.files.single.path != null && mounted) {
+      setState(() => _selectedImage = File(result.files.single.path!));
     }
   }
 

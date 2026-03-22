@@ -5,7 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 import '../../core/constants/app_config.dart';
 import '../../core/models/daily_mood.dart';
